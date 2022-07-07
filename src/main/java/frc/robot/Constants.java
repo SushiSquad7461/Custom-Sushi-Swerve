@@ -18,5 +18,10 @@ public final class Constants {
         public static final double ERROR_BOUND = 1; // in degrees
         public static final int DRIVE_CURRENT_LIMIT = 35;
         public static final int TURN_CURRENT_LIMIT = 35;
+
+        public static final double kPDrive = 0;
+        public static final double kIDrive = 0;
+        public static final double kDDrive = 0;
+        public static final double kFDrive = 0;
     }
 }

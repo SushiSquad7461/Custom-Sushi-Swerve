@@ -19,7 +19,7 @@ public class SwerveModule extends SubsystemBase {
   private final WPI_TalonFX drive;
   private final WPI_TalonFX turn;
   private final CANCoder canCoder;
-  
+
   private double newAngle;
   private boolean turnToNewAngle = false;
 
@@ -27,6 +27,11 @@ public class SwerveModule extends SubsystemBase {
     drive = MotorHelper.createFalconMotor(driveCanId, kSwerveModule.DRIVE_CURRENT_LIMIT, driveInversion);
     turn = MotorHelper.createFalconMotor(turnCanId, kSwerveModule.TURN_CURRENT_LIMIT, TalonFXInvertType.CounterClockwise);
     canCoder = new CANCoder(canCoderPort);
+
+    drive.config_kP(0, kSwerveModule.kPDrive);
+    drive.config_kI(0, kSwerveModule.kIDrive);
+    drive.config_kD(0, kSwerveModule.kDDrive);
+    drive.config_kF(0, kSwerveModule.kFDrive);
   }
 
   public void updateModule(Vector2 newPos) {
