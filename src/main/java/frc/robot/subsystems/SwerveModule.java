@@ -24,6 +24,7 @@ public class SwerveModule extends SubsystemBase {
 
   private double newAngle;
   private boolean turnToNewAngle = false;
+  private int turnInversion = 1;
 
   public SwerveModule(int driveCanId, TalonFXInvertType driveInversion,int turnCanId, int canCoderPort, double angleOffest) {
     drive = MotorHelper.createFalconMotor(driveCanId, kSwerveModule.DRIVE_CURRENT_LIMIT, driveInversion);
@@ -45,6 +46,13 @@ public class SwerveModule extends SubsystemBase {
     if (Math.abs(newPos.getAngle().toDegrees() - getModuleAngle()) >= kSwerveModule.ERROR_BOUND) {
         turnToNewAngle = true;
         newAngle = newPos.getAngle().toDegrees();
+
+        // Optimization
+        if (Math.abs(newAngle - getModuleAngle()) > 180) {
+            turnInversion = -1;
+        } else {
+            turnInversion = 1;
+        }
     } else {
         turnToNewAngle = false;
     }
@@ -58,9 +66,9 @@ public class SwerveModule extends SubsystemBase {
         if (Math.abs(newAngle - getModuleAngle()) <= kSwerveModule.ERROR_BOUND) {
             turnToNewAngle = false;
         } else if ((newAngle - canCoder.getPosition()) > 0) {
-            turn.set(ControlMode.PercentOutput, kSwerveModule.TURN_MOTOR_SPEED);
+            turn.set(ControlMode.PercentOutput, kSwerveModule.TURN_MOTOR_SPEED * turnInversion);
         } else {
-            turn.set(ControlMode.PercentOutput, -kSwerveModule.TURN_MOTOR_SPEED);
+            turn.set(ControlMode.PercentOutput, -kSwerveModule.TURN_MOTOR_SPEED * turnInversion);
         }
     }
   }
